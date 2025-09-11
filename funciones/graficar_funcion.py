@@ -1,15 +1,23 @@
+from typing import Iterable, List, Optional, Tuple
 import sympy as sp
 from sympy import lambdify
 import matplotlib.pyplot as plt
 
-def _linspace(a: float, b: float, n: int):
+def _linspace(a: float, b: float, n: int) -> List[float]:
     if n <= 1:
         return [a]
     paso = (b - a) / float(n - 1)
     return [a + i * paso for i in range(n)]
 
 
-def graficar_funcion(expr, x, intersecciones_x, interseccion_y, punto_evaluado=None, dominio="Todo R"):
+def graficar_funcion(
+    expr: sp.Expr,
+    x: sp.Symbol,
+    intersecciones_x: Iterable[float],
+    interseccion_y: Optional[float],
+    punto_evaluado: Optional[Tuple[float, float]] = None,
+    dominio: str = "Todo R",
+) -> None:
     # Generar puntos sin NumPy para un trazado suave
     valores_x = _linspace(-10.0, 10.0, 400)
     # Crear función numérica (usa math internamente)

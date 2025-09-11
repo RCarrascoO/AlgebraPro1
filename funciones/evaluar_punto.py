@@ -1,4 +1,11 @@
-def evaluar_punto(expr, x_val, x):
+from typing import Tuple
+import sympy as sp
+
+def evaluar_punto(expr: sp.Expr, x_val: float, x: sp.Symbol) -> Tuple[float, float]:
+    """Evalúa f(x) en x_val y retorna el par (x_val, f(x_val)).
+
+    Lanza ValueError en casos inválidos (p. ej. división por cero).
+    """
     try:
         print(f"Paso 1: Sustituir x={x_val} en {expr}")
         expr_sustituida = expr.subs(x, x_val)

@@ -1,6 +1,12 @@
+from typing import Union
 import sympy as sp
 
-def calcular_dominio(expr, x):
+def calcular_dominio(expr: sp.Expr, x: sp.Symbol) -> str:
+    """Calcula el dominio de una función racional/polinómica como string.
+
+    Para polinómicas retorna 'Todo R'; para racionales excluye ceros reales
+    del denominador.
+    """
     dominio = "Todo R"
     try:
         num, den = sp.fraction(sp.together(expr))

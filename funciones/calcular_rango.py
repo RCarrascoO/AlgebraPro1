@@ -1,6 +1,12 @@
+from typing import Union
 import sympy as sp
 
-def calcular_rango(expr, x):
+def calcular_rango(expr: sp.Expr, x: sp.Symbol) -> str:
+    """Devuelve un rango aproximado como string usando límites en ±∞.
+
+    Si los límites coinciden sugiere un intervalo; en otros casos devuelve
+    un mensaje indicando que se consulte el gráfico.
+    """
     rango_aprox = "Difícil simbólicamente; ver gráfico."
     try:
         lim_inf = sp.limit(expr, x, float('-inf'))
