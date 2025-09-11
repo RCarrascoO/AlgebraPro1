@@ -68,7 +68,7 @@ class InterfazGrafica:
     def calcular_intersecciones_x(self, funcion):
         # Busca los puntos donde la función cruza el eje x
         x = sp.symbols('x')
-        intersecciones = sp.solveset(funcion,x, domain=sp.S.reals)
+        intersecciones = sp.solveset(funcion, x, domain=sp.S.Reals)
         return intersecciones
     
     def calcular_intersecciones_y(self, funcion):
@@ -81,7 +81,7 @@ class InterfazGrafica:
 
     def mostrar_resultados(self, dominio, recorrido, intersecciones_x, interseccion_y, evaluacion):
         # Muestra los resultados del análisis
-        resultado = f"fominio: {dominio}\n"
+        resultado = f"dominio: {dominio}\n"
         resultado += f"recorrido aproximado: {recorrido}\n"
         resultado += f"intersecciones con el eje x: {intersecciones_x}\n"
         resultado += f"interseccion con el eje y: {interseccion_y}\n"
