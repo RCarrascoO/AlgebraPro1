@@ -1,9 +1,31 @@
 import sympy as sp
+from sympy import lambdify
 import matplotlib.pyplot as plt
 
+def _linspace(a: float, b: float, n: int):
+    if n <= 1:
+        return [a]
+    paso = (b - a) / float(n - 1)
+    return [a + i * paso for i in range(n)]
+
+
 def graficar_funcion(expr, x, intersecciones_x, interseccion_y, punto_evaluado=None, dominio="Todo R"):
-    valores_x = sp.linspace(-10, 10, 400)
-    valores_y = [expr.subs(x, xv) for xv in valores_x]
+    # Generar puntos sin NumPy para un trazado suave
+    valores_x = _linspace(-10.0, 10.0, 400)
+    # Crear función numérica (usa math internamente)
+    f_num = lambdify(x, expr, modules=["math"])
+    valores_y = []
+    for xv in valores_x:
+        try:
+            yv = f_num(xv)
+            # Si devuelve complejo o no convertible, marcamos como NaN
+            if isinstance(yv, complex):
+                valores_y.append(float('nan'))
+            else:
+                valores_y.append(float(yv))
+        except Exception:
+            # Discontinuidades/división por cero, etc.
+            valores_y.append(float('nan'))
     
     plt.figure(figsize=(8,6))
     plt.plot(valores_x, valores_y, label='f(x)', color='blue')
