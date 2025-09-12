@@ -7,11 +7,13 @@ if CURRENT_DIR not in sys.path:
     sys.path.insert(0, CURRENT_DIR)
 
 from interfaz.interfaz_grafica import InterfazGrafica
-import tkinter as tk
+import customtkinter as ctk
 
 
 def main():
-    root = tk.Tk()
+    ctk.set_appearance_mode("system")
+    ctk.set_default_color_theme("blue")
+    root = ctk.CTk()
     app = InterfazGrafica(root)
     root.mainloop()
 
