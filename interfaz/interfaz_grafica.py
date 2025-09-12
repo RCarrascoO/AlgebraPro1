@@ -51,10 +51,27 @@ class InterfazGrafica:
 
         # Controles e información (izquierda)
         ctk.CTkLabel(left, text="Ingrese la función f(x)").pack(anchor="w")
-        ctk.CTkEntry(left, textvariable=self.funcion_str, width=420).pack(fill="x", pady=(2, 8))
+        self.funcion_entry = ctk.CTkEntry(
+            left,
+            textvariable=self.funcion_str,
+            width=420,
+            placeholder_text="Ej: x**2 - 2x + 1",
+        )
+        self.funcion_entry.pack(fill="x", pady=(2, 2))
+        ctk.CTkLabel(
+            left,
+            text="Potencia: usa ** (x**2). Aceptamos x^2 por conveniencia.",
+            text_color=("gray40", "gray60"),
+        ).pack(anchor="w", pady=(0, 6))
 
         ctk.CTkLabel(left, text="Ingrese el valor de x (opcional)").pack(anchor="w")
-        ctk.CTkEntry(left, textvariable=self.valor_x_str, width=200).pack(pady=(2, 8))
+        self.x_entry = ctk.CTkEntry(
+            left,
+            textvariable=self.valor_x_str,
+            width=200,
+            placeholder_text="Opcional (ej: 2)",
+        )
+        self.x_entry.pack(pady=(2, 8))
 
         btns = ctk.CTkFrame(left)
         btns.pack(pady=4, fill="x")
