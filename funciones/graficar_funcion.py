@@ -1,4 +1,5 @@
 from typing import Iterable, List, Optional, Tuple
+import math
 import sympy as sp
 from sympy import lambdify
 import matplotlib.pyplot as plt
@@ -20,20 +21,47 @@ def graficar_funcion(
 ) -> None:
     # Generar puntos sin NumPy para un trazado suave
     valores_x = _linspace(-10.0, 10.0, 400)
+    paso_x = valores_x[1] - valores_x[0] if len(valores_x) > 1 else 0.05
     # Crear función numérica (usa math internamente)
     f_num = lambdify(x, expr, modules=["math"])
-    valores_y = []
+    # Detectar posibles singularidades (ceros reales del denominador)
+    singularidades: List[float] = []
+    try:
+        num, den = sp.fraction(sp.together(expr))
+        if den != 1:
+            sols = sp.solve(sp.Eq(den, 0), x)
+            singularidades = [float(s) for s in sols if s.is_real]
+    except Exception:
+        singularidades = []
+
+    delta = 2 * paso_x  # vecindad para romper la línea cerca de asintotas
+    y_clip = 1e6  # valores excesivos los tratamos como discontinuidad
+
+    valores_y: List[float] = []
     for xv in valores_x:
+        # Si estamos muy cerca de una singularidad, cortamos la línea
+        if any(abs(xv - s) < delta for s in singularidades):
+            valores_y.append(float('nan'))
+            continue
         try:
             yv = f_num(xv)
-            # Si devuelve complejo o no convertible, marcamos como NaN
-            if isinstance(yv, complex):
+            # complejo, no finito o excesivo => NaN para cortar segmento
+            if isinstance(yv, complex) or not isinstance(yv, (int, float)):
+                valores_y.append(float('nan'))
+            elif not math.isfinite(yv) or abs(yv) > y_clip:
                 valores_y.append(float('nan'))
             else:
                 valores_y.append(float(yv))
         except Exception:
-            # Discontinuidades/división por cero, etc.
             valores_y.append(float('nan'))
+
+    # Romper segmentos con saltos bruscos entre puntos consecutivos
+    for i in range(1, len(valores_y)):
+        y0, y1 = valores_y[i - 1], valores_y[i]
+        if not (math.isfinite(y0) and math.isfinite(y1)):
+            continue
+        if abs(y1 - y0) > 50 * max(1.0, abs(y0)):
+            valores_y[i] = float('nan')
     
     plt.figure(figsize=(8,6))
     plt.plot(valores_x, valores_y, label='f(x)', color='blue')
