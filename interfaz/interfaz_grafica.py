@@ -79,9 +79,11 @@ class InterfazGrafica:
             side="left", padx=(0, 8)
         )
         ctk.CTkButton(btns, text="Graficar función", command=self.graficar_funcion).pack(
+            side="left", padx=(0, 8)
+        )
+        ctk.CTkButton(btns, text="Limpiar", command=self.limpiar_interfaz).pack(
             side="left"
         )
-
         # Panel de resultados/justificación
         self.texto_resultados = ctk.CTkTextbox(left, height=200, width=560)
         self.texto_resultados.pack(pady=6, fill="both", expand=True)
@@ -198,5 +200,15 @@ class InterfazGrafica:
             self.canvas.draw()
         except Exception as e:
             messagebox.showerror("Error", f"Ocurrió un error al graficar la función: {e}")
-
+    
+    def limpiar_interfaz(self):
+        # Limpia el textbox de resultados
+        self.texto_resultados.delete("1.0", "end")
+        # Limpia el gráfico
+        self.ax.clear()
+        self.ax.set_title("Gráfica de la Función")
+        self.ax.set_xlabel("x (independiente)")
+        self.ax.set_ylabel("y (dependiente)")
+        self.ax.grid(True)
+        self.canvas.draw()
 
